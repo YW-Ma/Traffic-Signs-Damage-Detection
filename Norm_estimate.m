@@ -1,3 +1,6 @@
+% workflow: 4
+% implement local norm estimation for the (traffic signs) points
+
 ptCloud = pointCloud(container(1:1401,1:3));
 normals = pcnormals(ptCloud);
 
