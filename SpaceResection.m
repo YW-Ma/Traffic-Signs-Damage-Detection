@@ -2,10 +2,10 @@
 % For the format of the following two variables, please load
 % SpaceResection.mat.
 
-
-order = randperm(16,10);
-controlPts = c1(order,:);
-ImagePts = station1(order,:);
+load good_for_station1_real.mat
+order = randperm(13,8);
+controlPts = c2(order,:);
+ImagePts = station2(order,:);
 
 %1. INITIALIZE
 f=3540;
@@ -163,44 +163,55 @@ while notConverge
     end
 end
 
-if notConverge == false
-    input = [14.455	-2.779	0.275]
-    Xi = -input(2);
-    Yi = input(3);
-    Zi = -input(1);
-    R(1, 1) = cos(Phi)*cos(Kappa) - sin(Phi)*sin(Omega)*sin(Kappa);
-    R(1, 2) = cos(Omega)*sin(Kappa);
-    R(1, 3) = sin(Phi)*cos(Kappa) + cos(Phi)*sin(Omega)*sin(Kappa);
-    R(2, 1) = -cos(Phi)*sin(Kappa) - sin(Phi)*sin(Omega)*cos(Kappa);
-    R(2, 2) = cos(Omega)*cos(Kappa);
-    R(2, 3) = -sin(Phi)*sin(Kappa) + cos(Phi)*sin(Omega)*cos(Kappa);
-    R(3, 1) = -sin(Phi)*cos(Omega);
-    R(3, 2) = -sin(Omega);
-    R(3, 3) = cos(Phi)*cos(Omega);
-    XR = R(1, 1)*(Xi - Xs) + R(1, 2)*(Yi - Ys) + R(1, 3)*(Zi - Zs);
-    YR = R(2, 1)*(Xi - Xs) + R(2, 2)*(Yi - Ys) + R(2, 3)*(Zi - Zs);
-    ZR = R(3, 1)*(Xi - Xs) + R(3, 2)*(Yi - Ys) + R(3, 3)*(Zi - Zs);
-    xi = -f * XR / ZR + x0;
-    yi = -f * YR / ZR + y0;
-    %draw several point in the photo.
-    img = imread('Zuo001.JPG');
-    x = xi;
-    y = yi;
-    
-    %convert
-    x = floor(x+1544);
-    y = floor(1028-y);
-    color = [255,0,0];
-    length = 25;
-    width = 1;
-    for c = 1:3
-        for w = -width:width
-            img(y-length:y+length, x+w, c) = color(c);
-            img(y+w, x-length:x+length, c) = color(c);
-        end
-    end
-    imshow(img);
+% if notConverge == false
+%     input = [14.455	-2.779	0.275]
+%     Xi = -input(2);
+%     Yi = input(3);
+%     Zi = -input(1);
+%     R(1, 1) = cos(Phi)*cos(Kappa) - sin(Phi)*sin(Omega)*sin(Kappa);
+%     R(1, 2) = cos(Omega)*sin(Kappa);
+%     R(1, 3) = sin(Phi)*cos(Kappa) + cos(Phi)*sin(Omega)*sin(Kappa);
+%     R(2, 1) = -cos(Phi)*sin(Kappa) - sin(Phi)*sin(Omega)*cos(Kappa);
+%     R(2, 2) = cos(Omega)*cos(Kappa);
+%     R(2, 3) = -sin(Phi)*sin(Kappa) + cos(Phi)*sin(Omega)*cos(Kappa);
+%     R(3, 1) = -sin(Phi)*cos(Omega);
+%     R(3, 2) = -sin(Omega);
+%     R(3, 3) = cos(Phi)*cos(Omega);
+%     XR = R(1, 1)*(Xi - Xs) + R(1, 2)*(Yi - Ys) + R(1, 3)*(Zi - Zs);
+%     YR = R(2, 1)*(Xi - Xs) + R(2, 2)*(Yi - Ys) + R(2, 3)*(Zi - Zs);
+%     ZR = R(3, 1)*(Xi - Xs) + R(3, 2)*(Yi - Ys) + R(3, 3)*(Zi - Zs);
+%     xi = -f * XR / ZR + x0;
+%     yi = -f * YR / ZR + y0;
+%     %draw several point in the photo.
+%     img = imread('Station1/Zuo001.JPG');
+%     x = xi;
+%     y = yi;
+%     
+%     %convert
+%     x = floor(x+1544);
+%     y = floor(1028-y);
+%     color = [255,0,0];
+%     length = 25;
+%     width = 1;
+%     for c = 1:3
+%         for w = -width:width
+%             img(y-length:y+length, x+w, c) = color(c);
+%             img(y+w, x-length:x+length, c) = color(c);
+%         end
+%     end
+%     imshow(img);
+% end
+
+V = A*X - L;
+M0 = V'*V/(equationNum-elementNumber);
+m = sqrt(M0(1));
+Q = inv(A'*A);
+for i = 1:elementNumber
+    M(i) = sqrt(Q(i,i)*m);
 end
+M(7:9)
+result_collector = [Xs,Ys,Zs,Phi,Omega,Kappa,f,x0,y0]
+m
 %loop - update RAL - X - Not converge
 % IF you want to record the answer, please use the following codes.
 % fid= fopen("result_station1_new.txt",'a+');

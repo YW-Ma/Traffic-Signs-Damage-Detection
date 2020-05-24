@@ -10,3 +10,5 @@ for i = 21:32
     [ID,XI,YI,ZI,INTENSITY] = textread(['Station1\',listname{i},'.txt'],'%n%f%f%f%f','delimiter',',');
     save([listname{i},'.mat'],'ID','XI','YI','ZI','INTENSITY') ;
 end
+% the ID here is not the "ID" we want!!!!
+% I set the ID of tilt to 1,2,3,...
